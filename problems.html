@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		<title id="title">Milmon Problem Set</title>
+		<link rel="shortcut icon" type="image/x-icon" href="file/image/head.png">
+		<link rel="stylesheet" href="file/css/mdui.min.css"/>
+		<link rel="stylesheet" href="file/css/milmon.css"/>
+		<script src="file/script/milmon.js"></script>
+		<script src="file/script/problem.js"></script>
+		<script src="file/script/mdui.min.js"></script>
+		<script>
+			function isnumber(x){
+				return (/(^[1-9]\d*$)/.test(x));
+			}
+			var problems,tags=[];
+			var searchdiff=9,diffcolor=["#bfbfbf","#fe4c61","#f39c11","#ffc116","#52c41a",
+										"#3498db","#9d3dcf","#11207e","#052242","purple"];
+			var algorithmtags=new Set(),sourcetags=new Set();
+			
+			function gettagname(id){
+				return tags[parseInt(id/1000)][id%1000];
+			}
+			function havetagcheck(alltag,tag){
+				var tags=alltag.split(';');
+				for(var i=0;i<tags.length;i++)
+					if(tags[i]==tag)return true;
+				return false;
+			}
+
+			function searchproblems(){
+				var htmlcode="";
+				for(var i=0;i<problems.length;i++){
+					var tmp=problems[i].split('|');
+					if(tmp.length!=6)continue;
+					if(tmp[1].split($('problemsearch-title').value).length==1)continue;
+					if(!(searchdiff==9||tmp[2]==searchdiff))continue;
+					var flag=false,flag2;
+					for(var j of algorithmtags.values())
+						if(!havetagcheck(tmp[3],gettagname(j)))flag=true;
+					if(flag)continue;
+					flag=true,flag2=false;
+					for(var j of sourcetags.values())
+						if(isnumber(gettagname(j).split(' ')[0])){
+							if(havetagcheck(tmp[4],gettagname(j)))flag=false;
+							flag2=true;
+						}
+					if(flag2&&flag)continue;
+					flag=true,flag2=false;
+					for(var j of sourcetags.values())
+						if(!isnumber(gettagname(j).split(' ')[0])){
+							if(havetagcheck(tmp[4],gettagname(j)))flag=false;
+							flag2=true;
+						}
+					if(flag2&&flag)continue;
+					htmlcode=htmlcode+'<div class="mdui-divider mdui-m-y-0"></div><div class="mdui-row pr'+
+						'oblemsearch-problem"><div class="mdui-col-xs-1"><p class="problemsearch-pid" style="line-height: 26px;">'   +
+						tmp[0]+'</p></div><div class="mdui-col-xs-3" onclick="window.location.href=\'/pro'+
+						'blem?id='+tmp[0]+'\';"><p class="problemsearch-title" style="line-height: 26px;">'+tmp[1]+'</p></div><div c'+
+						'lass="mdui-col-xs-6"><p class="problemsearch-algorithmtag" style="line-height: 26px;">'                     +
+						gettags(tmp[3].split(";"),"#14558f")+'&nbsp;'+gettags(tmp[4].split(";"),"#22700a")+
+						'</p></div><div class="mdui-col-xs-2"><p class="problemsearch-difficultytag" style="line-height: 26px;">'    +
+						difficulty(tmp[2])+'</p></div></div>';
+				}
+				if(htmlcode=="")$("problems-div").innerHTML='<div class="mdui-divider mdui-m-y-0"></div><'+
+						'div class="mdui-row"><div class="mdui-col-xs-12"><p style="text-align: center;">'+
+						'不存在符合条件的题目</p></div></div>';
+				else $("problems-div").innerHTML=htmlcode;
+			}
+			loadfile("/problem/config.txt",function(text){
+				problems=text.split("\n");
+				searchproblems();
+			});
+			function choosedifficulty(d){
+				$("difficulty-"+String(searchdiff)).setAttribute("style","");
+				searchdiff=d;
+				$("difficulty-"+String(searchdiff)).setAttribute("style","background: "+diffcolor[d]+"; color: white;");
+				searchproblems();
+			}
+			function choosealgorithmtag(tagid){
+				if(algorithmtags.has(tagid)){
+					algorithmtags.delete(tagid);
+					$("algorithmtag-"+String(tagid)).classList.remove("problemsearch-selector-alg");
+					$("algorithmtag-"+String(tagid)).classList.add("problemsearch-notselector-alg");
+				}
+				else{
+					algorithmtags.add(tagid);
+					$("algorithmtag-"+String(tagid)).classList.remove("problemsearch-notselector-alg");
+					$("algorithmtag-"+String(tagid)).classList.add("problemsearch-selector-alg");
+				}
+				var htmlcode="";
+				for(var i of algorithmtags.values()){
+					htmlcode=htmlcode+'<span class="tag problemsearch-tagselector problemsearch-selector-'+
+						'alg" onclick="choosealgorithmtag('+String(i)+')">'+gettagname(i)+'</span>&nbsp;';
+				}
+				$("problemsearch-tags-alg").innerHTML=htmlcode+'<font class="mdui-list-item-icon mdui-ico'+
+					'n material-icons problemsearch-tags-edit" mdui-dialog="{target: \'#choosetags\'}'+
+					'">edit</font>';
+				searchproblems();
+			}
+			function choosesourcetag(tagid){
+				if(sourcetags.has(tagid)){
+					sourcetags.delete(tagid);
+					$("sourcetag-"+String(tagid)).classList.remove("problemsearch-selector-source");
+					$("sourcetag-"+String(tagid)).classList.add("problemsearch-notselector-source");
+				}
+				else{
+					sourcetags.add(tagid);
+					$("sourcetag-"+String(tagid)).classList.remove("problemsearch-notselector-source");
+					$("sourcetag-"+String(tagid)).classList.add("problemsearch-selector-source");
+				}
+				var htmlcode="";
+				for(var i of sourcetags.values()){
+					htmlcode=htmlcode+'<span class="tag problemsearch-tagselector problemsearch-selector-'+
+						'source" onclick="choosesourcetag('+String(i)+')">'+gettagname(i)+'</span>&nbsp;';
+				}
+				$("problemsearch-tags-source").innerHTML=htmlcode+'<font class="mdui-list-item-icon mdui-ico'+
+					'n material-icons problemsearch-tags-edit" mdui-dialog="{target: \'#chooseta'+
+					'gs\'}">edit</font>';
+				searchproblems();
+			}
+			loadfile("/problem/tags.txt",function(text){
+				var tagsets=text.split("\n"),htmlcode="";
+				for(var i=0;i<tagsets.length;i++){
+					var tag=tagsets[i].split(";");
+					if(tag.length==1)continue;
+					tags[i]=tag;
+					htmlcode=htmlcode+'<p style="font-size: 20px;">'+tag[0]+'</p>';
+					htmlcode=htmlcode+'<p style="line-height: 30px;">';
+					for(var j=0;j<tag.length;j++){
+						if(tag[j]=="其他")continue;
+						if(tag[j]=="来源")continue;
+						if(tag[0]=="来源")htmlcode=htmlcode+'<span class="tag problemsearch-tagselector p'+
+							'roblemsearch-notselector-source" id="sourcetag-'+String(j)+'" onclick="choosesource'+
+							'tag('+String(j)+')">'+tag[j]+'</span>&nbsp;&nbsp;';
+						else htmlcode=htmlcode+'<span class="tag problemsearch-tagselector problemsearch-'+
+							'notselector-alg" id="algorithmtag-'+String(i*1000+j)+'" onclick="choosealgor'+
+							'ithmtag('+String(i*1000+j)+')">'+tag[j]+'</span>&nbsp;&nbsp;';
+					}
+					htmlcode=htmlcode+'</p>';
+				}
+				$("problemsearch-maychoosetags").innerHTML=htmlcode;
+                if(getParam("tag")!=null){
+                    var id=Number(getParam("tag"));
+                    if(id<1000)choosesourcetag(id);
+                    else choosealgorithmtag(id);
+                }
+			});
+			window.onload=function(){
+				$('problemsearch-title').value="";
+				mdui.updateTextFields();
+				if(getParam("difficulty")!=null)
+					choosedifficulty(Number(getParam("difficulty")));
+			}
+		</script>
+	</head>
+	<body class="mdui-theme-primary-purple" style="background: #B7EEF8;">
+		<!-- ---------标题栏--------------- -->
+		<div class="mc-appbar mdui-appbar-fixed mdui-appbar mdui-color-theme mdui-hoverable">
+			<div class="toolbar mdui-toolbar">
+				<span class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" mdui-drawer="{target:'#main-drawer',overlay:true,swipe:true}">
+					<i class="mdui-icon material-icons">menu</i>
+				</span>
+				<a href="/" class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white">
+					<i class="mdui-icon material-icons" style="color: #fff;">home</i>
+				</a>
+				<span class="mdui-typo-title" style="color: #fff;">Milmon Problem Set</span>
+				<div class="mdui-toolbar-spacer"></div>
+				<a href="" class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white">
+					<i class="mdui-icon material-icons" style="color: #fff;">refresh</i>
+				</a>
+			</div>
+		</div>
+
+		<!-- ---------左侧菜单--------------- -->
+		<div class="mdui-drawer mdui-drawer-close" id="main-drawer" style="background:rgb(52,152,219);color:white">
+			<ul class="mdui-list">
+				<a class="mdui-list-item mdui-ripple" href="/">
+					<i class="mdui-list-item-icon mdui-icon material-icons" style="color:#fff;">home</i>
+					<div class="mdui-list-item-content">首页</div>
+				</a>
+				<div class="mdui-divider mdui-m-y-0"></div>
+				<a class="mdui-list-item mdui-ripple" href="/blog">
+					<i class="mdui-list-item-icon mdui-icon material-icons" style="color:#fff;">library_books</i>
+					<div class="mdui-list-item-content">博文列表</div>
+				</a>
+				<a class="mdui-list-item mdui-ripple mdui-list-item-active" href="/problems">
+					<i class="mdui-list-item-icon mdui-icon material-icons" style="color:#fff;">work</i>
+					<div class="mdui-list-item-content">题目中心</div>
+				</a>
+				<a class="mdui-list-item mdui-ripple" href="/tools">
+					<i class="mdui-list-item-icon mdui-icon material-icons" style="color:#fff;">apps</i>
+					<div class="mdui-list-item-content">工具中心</div>
+				</a>
+			</ul>
+		</div>
+
+		<!-- ---------- 对话框 ---------- -->
+		<div class="mdui-dialog" id="choosetags">
+			<br>
+			<div id="problemsearch-maychoosetags" class="mdui-dialog-content"></div>
+			<div class="mdui-dialog-actions"><br></div>
+		</div>
+
+		<!-- ---------- Problem ---------- -->
+		<br><br><br><br><br><br>
+		<div class="mdui-container mdui-shadow-5" style="background: white;">
+			<div style="padding: 8px;">
+				<div class="mdui-row">
+					<div class="mdui-col-xs-2">
+						<br>
+						<h2>查找题目</h2>
+					</div>
+					<div class="mdui-textfield mdui-textfield-floating-label mdui-col-xs-9">
+						<label class="mdui-textfield-label">搜索标题</label>
+						<input class="mdui-textfield-input" id="problemsearch-title" onchange="searchproblems();">
+					</div>
+				</div>
+				<br>
+				<div class="mdui-row">
+					<div class="mdui-col-xs-2" style="text-align: right;">
+						<b>难度</b>
+					</div>
+					<div class="mdui-col-xs-10">
+						<span class='problemsearch-difficulty' id="difficulty-9" style="background: purple; color: white;" onclick="choosedifficulty(9);">全部</span>
+						<span class='problemsearch-difficulty' id="difficulty-0" onclick="choosedifficulty(0);">暂未评定</span>
+						<span class='problemsearch-difficulty' id="difficulty-1" onclick="choosedifficulty(1);">入门</span>
+						<span class='problemsearch-difficulty' id="difficulty-2" onclick="choosedifficulty(2);">普及-</span>
+						<span class='problemsearch-difficulty' id="difficulty-3" onclick="choosedifficulty(3);">普及/提高-</span>
+						<span class='problemsearch-difficulty' id="difficulty-4" onclick="choosedifficulty(4);">普及+/提高</span>
+						<span class='problemsearch-difficulty' id="difficulty-5" onclick="choosedifficulty(5);">提高+/省选-</span>
+						<span class='problemsearch-difficulty' id="difficulty-6" onclick="choosedifficulty(6);">省选/NOI-</span>
+						<span class='problemsearch-difficulty' id="difficulty-7" onclick="choosedifficulty(7);">NOI/NOI+</span>
+						<span class='problemsearch-difficulty' id="difficulty-8" onclick="choosedifficulty(8);">CTSC/IOI</span>
+					</div>
+				</div>
+				<br>
+				<div class="mdui-row">
+					<div class="mdui-col-xs-2" style="text-align: right;">
+						<b>算法标签</b>
+					</div>
+					<div class="mdui-col-xs-10">
+						<div id="problemsearch-tags-alg" style="line-height: 24px;">
+							<font class="mdui-list-item-icon mdui-icon material-icons problemsearch-tags-edit" mdui-dialog="{target: '#choosetags'}">edit</font>
+						</div>
+					</div>
+				</div>
+				<br>
+				<div class="mdui-row">
+					<div class="mdui-col-xs-2" style="text-align: right;">
+						<b>来源标签</b>
+					</div>
+					<div class="mdui-col-xs-10">
+						<div id="problemsearch-tags-source" style="line-height: 24px;">
+							<font class="mdui-list-item-icon mdui-icon material-icons problemsearch-tags-edit" mdui-dialog="{target: '#choosetags'}">edit</font>
+						</div>
+					</div>
+				</div>
+				<br>
+			</div>
+		</div>
+		<br>
+		<div class="mdui-container mdui-shadow-5" style="background: white;">
+			<div style="padding: 5px;">
+				<div class="mdui-row" style="font-size: 15px;">
+					<div class="mdui-col-xs-1">
+						<p class="problemsearch-pid"><strong>题目编号</strong></p>
+					</div>
+					<div class="mdui-col-xs-3">
+						<p><strong>标题</strong></p>
+					</div>
+					<div class="mdui-col-xs-6">
+						<p class="problemsearch-algorithmtag"><strong>标签</strong></p>
+					</div>
+					<div class="mdui-col-xs-2">
+						<p class="problemsearch-difficultytag"><strong>难度</strong></p>
+					</div>
+				</div>
+				<div id="problems-div">
+					<div class="mdui-divider mdui-m-y-0"></div>
+					<div class="mdui-row">
+						<div class="mdui-col-xs-12">
+							<p style="text-align: center;">加载中 ...</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<br><br>
+
+		<!-- -----------联系方式-------------- -->
+
+		<footer style="background:#444;">
+			<div class="mdui-container mdui-p-t-3 mdui-text-center">
+				<a class="mdui-btn mdui-btn-icon" mdui-tooltip="{content:'腾讯 QQ'}" href="tencent://AddContact/?subcmd=all&uin=115549630">
+					<img src="/file/image/qq.ico" width="20px" height="20px" style="margin:7px 0px 0px 0px;">
+				</a>
+				<a class="mdui-btn mdui-btn-icon" mdui-tooltip="{content:'洛谷'}" href="https://www.luogu.com.cn/user/234641">
+					<img src="/file/image/luogu.ico" width="20px" height="20px" style="margin:7px 0px 0px 0px;">
+				</a>
+				<a class="mdui-btn mdui-btn-icon" mdui-tooltip="{content:'CodeForces'}" href="https://codeforces.com/profile/liujiameng">
+					<img src="/file/image/codeforces.png" width="20px" height="20px" style="margin:8px 0px 0px 0px;">
+				</a>
+				<a class="mdui-btn mdui-btn-icon" mdui-tooltip="{content:'Atcoder'}" href="https://atcoder.jp/users/liujiameng">
+					<img src="/file/image/atcoder.png" width="20px" height="20px" style="margin:8px 0px 0px 0px;">
+				</a>
+			</div>
+			<br><br><br>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,143 @@
+@font-face{
+	font-family: font-codetext;
+	src: url("../fonts/consola.ttf");
+}
+
+body.pagefooterfixer{
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
+#main-container.pagefooterfixer{
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	position: relative;
+}
+#main-page.pagefooterfixer{
+	margin: 0 auto;
+	padding-bottom: 100px;
+}
+#page-footer.pagefooterfixer{
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 100px;
+	clear: both;
+}
+
+.code-copybutton{
+	float: right;
+	padding: 4px 8px;
+	border-bottom-left-radius: 10px;
+	border-top-right-radius: 10px;
+	border-top: hidden;
+	border-bottom: 1px solid purple;
+	border-left: 1px solid purple;
+	border-right: hidden;
+	cursor: pointer;
+}
+.code-copybutton-cursor{
+	background-color: white;
+	color: purple;
+}
+.code-copybutton-cursor:hover{
+	background-color: purple;
+	color: white;
+}
+
+.code-divinside{
+	padding: 1px;
+}
+.code-divoutside{
+	border-radius: 10px;
+	border: 1px solid purple;
+}
+.code-pre{
+	margin-left: 15px;
+	line-height: 150%;
+	font-family: "font-codetext";
+}
+.code-inline{
+	font-family: "font-codetext";
+}
+
+.tag{
+	padding: 2px 8px;
+	border-radius: 3px;
+	color: white;
+}
+
+.problemsearch-tags-edit{
+	cursor: pointer;
+	font-size: 20px;
+}
+.problemsearch-tagselector{
+	display: inline-block;
+	cursor: pointer;
+	line-height: 17.25px;
+}
+.problemsearch-selector-alg{
+	background: #14558f;
+	color: white;
+}
+.problemsearch-notselector-alg{
+	background: white;
+	color: #14558f;
+	border: 1px solid #14558f;
+}
+.problemsearch-notselector-alg:hover{
+	background: #efefef;
+	color: #14558f;
+	border: 1px solid #14558f;
+}
+.problemsearch-selector-source{
+	background: #22700a;
+	color: white;
+}
+.problemsearch-notselector-source{
+	background: white;
+	color: #22700a;
+	border: 1px solid #22700a;
+}
+.problemsearch-notselector-source:hover{
+	background: #efefef;
+	color: #22700a;
+	border: 1px solid #22700a;
+}
+
+.problemsearch-problem{
+	background: white;
+}
+.problemsearch-problem:hover{
+	background: #efefef;
+}
+.problemsearch-pid{
+	text-align: center;
+}
+.problemsearch-title{
+	cursor: pointer;
+}
+.problemsearch-algorithmtag{
+	text-align: right;
+}
+.problemsearch-difficultytag{
+	text-align: center;
+}
+
+.problemsearch-difficulty{
+	cursor: pointer;
+	padding: 2px 8px;
+	border-radius: 3px;
+}
+
+.difficult-tag{
+	cursor: pointer;
+}
+
+.filesandlinks-row{
+	background: #efefef;
+}
+.filesandlinks-row:hover{
+	background: #dfdfdf;
+}
