@@ -1,0 +1,4 @@
+Hank's Problem;hank s;0402 MB;8
+BDFS;Hank Algorithm
+IOI;2023
+LGP1001
