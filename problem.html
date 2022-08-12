@@ -41,7 +41,7 @@
 					if(!flag)tmp=tmp+"|||";
 					var pid=source[i].split("\n")[0].split("\r")[0];
 					flag=false;
-					tmp=tmp+"https://molmin.github.io/problem/goto?id="+pid+"||";
+					tmp=tmp+"https://leoair-xcj.github.io/problem/goto?id="+pid+"||";
 					if(gettype(pid)!=null)tmp=tmp+gettype(pid)+" - ";
 					tmp=tmp+getnumberid(pid);
 				}
@@ -62,7 +62,7 @@
 					config=config+gettags(text.split("\n")[2].split(";"),"#22700a");
 					config=config+"&nbsp;"+difficulty(text.split("\n")[0].split(";")[3]);
 					$("config-div").innerHTML=config;
-					var systemlink="https://molmin.github.io/problem/"+getParam("id"),linkhtml="";
+					var systemlink="https://leoair-xcj.github.io/problem/"+getParam("id"),linkhtml="";
 					if(text.split("\n")[3].length>2)linkhtml=linkhtml+"<h4 style='line-height: 0px;'>题目来源</h4>"+sourcelinksworker(text.split("\n")[3].split(";"))+"<br>";
 					if(text.split("\n")[4].length>5)linkhtml=linkhtml+"<h4 style='line-height: 0px;'>外链与附件</h4>"+linksworker(text.split("\n")[4])+"<br>";
 					$("links").innerHTML=linkhtml+"<h4 style='line-height: 0px;'>系统文件</h4>"+linksworker(systemlink+"/statement.md||statement.md|||"+systemlink+"/solution.md||solution.md|||"+systemlink+"/code.cpp||code.cpp");
