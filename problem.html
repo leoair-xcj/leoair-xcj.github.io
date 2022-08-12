@@ -17,6 +17,8 @@
 				if(t=="AT")return "AtCoder";
 				if(t=="BZ")return "BZOJ";
 				if(t=="CF")return "CodeForces";
+				if(t=="SP")return "Sphere OJ";
+				return null;
 			}
 			function getnumberid(id){
 				var s="";
@@ -36,10 +38,12 @@
 				var tmp="",flag=true;
 				for(var i=0;i<source.length;i++){
 					if(source[i].length<3)continue;
-					if(flag)flag=false,tmp=tmp+"|||";
-					tmp=tmp+"https://molmin.github.io/problem/goto?id="+source[i]+"||";
-					if(gettype(source[i])!=null)tmp=tmp+gettype(source[i])+" - ";
-					tmp=tmp+getnumberid(source[i]);
+					if(!flag)tmp=tmp+"|||";
+					var pid=source[i].split("\n")[0].split("\r")[0];
+					flag=false;
+					tmp=tmp+"https://molmin.github.io/problem/goto?id="+pid+"||";
+					if(gettype(pid)!=null)tmp=tmp+gettype(pid)+" - ";
+					tmp=tmp+getnumberid(pid);
 				}
 				return linksworker(tmp);
 			}
@@ -59,8 +63,8 @@
 					config=config+"&nbsp;"+difficulty(text.split("\n")[0].split(";")[3]);
 					$("config-div").innerHTML=config;
 					var systemlink="https://molmin.github.io/problem/"+getParam("id"),linkhtml="";
-					if(text.split("\n")[4].length>5)linkhtml="<h4 style='line-height: 0px;'>外链与附件</h4>"+linksworker(text.split("\n")[4])+"<br>";
 					if(text.split("\n")[3].length>2)linkhtml=linkhtml+"<h4 style='line-height: 0px;'>题目来源</h4>"+sourcelinksworker(text.split("\n")[3].split(";"))+"<br>";
+					if(text.split("\n")[4].length>5)linkhtml=linkhtml+"<h4 style='line-height: 0px;'>外链与附件</h4>"+linksworker(text.split("\n")[4])+"<br>";
 					$("links").innerHTML=linkhtml+"<h4 style='line-height: 0px;'>系统文件</h4>"+linksworker(systemlink+"/statement.md||statement.md|||"+systemlink+"/solution.md||solution.md|||"+systemlink+"/code.cpp||code.cpp");
 				});
 				loadfile("problem/"+getParam("id")+"/statement.md",function(text){
@@ -128,7 +132,7 @@
 					<a href="/problems" class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white">
 						<i class="mdui-icon material-icons" style="color: #fff;">arrow_back</i>
 					</a>
-					<span class="mdui-typo-title" style="color: #fff;">xh_foever Problem</span>
+					<span class="mdui-typo-title" style="color: #fff;">Milmon Problem</span>
 					<div class="mdui-toolbar-spacer"></div>
 					<a href="" class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white">
 						<i class="mdui-icon material-icons" style="color: #fff;">refresh</i>
