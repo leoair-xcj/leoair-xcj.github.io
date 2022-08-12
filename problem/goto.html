@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		<script src="../file/script/milmon.js"></script>
+		<script>
+			function getnumberid(id){
+				var s="";
+				for(var i=2;i<id.length;i++)
+					s=s+id[i];
+				return s;
+			}
+			function geturl(id){
+				var t=""; t=t+id[0],t=t+id[1];
+                var n=getnumberid(id);
+				if(t=="LG")return "https://www.luogu.com.cn/problem/"+n;
+				if(t=="AT"){
+                    var contestid=n.split(n[n.length-1])[0];
+                    return "https://atcoder.jp/contests/"+contestid+"/tasks/"+contestid+"_"+n[n.length-1];
+                }
+				if(t=="BZ")return "https://hydro.ac/d/bzoj/p/"+n;
+				if(t=="CF"){
+                    var contestid=n.split(n[n.length-1])[0];
+                    return "https://codeforces.com/problemset/problem/"+contestid+"/"+n[n.length-1];
+                }
+				if(t=="SP")return "https://www.spoj.com/problems/"+n;
+				return null;
+			}
+            window.location.href=geturl(getParam('id'));
+		</script>
+	</head>
+	<body>
+	</body>
+</html>
