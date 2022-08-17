@@ -57,10 +57,15 @@
 					config=config+"时间限制："+text.split("\n")[0].split(";")[1];
 					config=config+"&nbsp;&nbsp;&nbsp;&nbsp;空间限制："+text.split("\n")[0].split(";")[2];
 					config=config+"</p>";
-					config=config+gettags(text.split("\n")[1].split(";"),"#14558f");
-					config=config+"&nbsp;";
-					config=config+gettags(text.split("\n")[2].split(";"),"#22700a");
-					config=config+"&nbsp;"+difficulty(text.split("\n")[0].split(";")[3]);
+					if(text.split("\n")[1].length>1){
+						config=config+gettags(text.split("\n")[1].split(";"),"#14558f");
+						config=config+"&nbsp;";
+					}
+					if(text.split("\n")[2].length>1){
+						config=config+gettags(text.split("\n")[2].split(";"),"#22700a");
+						config=config+"&nbsp;";
+					}
+					config=config+difficulty(text.split("\n")[0].split(";")[3]);
 					$("config-div").innerHTML=config;
 					var systemlink="https://leoair-xcj.github.io/problem/"+getParam("id"),linkhtml="";
 					if(text.split("\n")[3].length>2)linkhtml=linkhtml+"<h4 style='line-height: 0px;'>题目来源</h4>"+sourcelinksworker(text.split("\n")[3].split(";"))+"<br>";
