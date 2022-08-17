@@ -58,9 +58,14 @@
 						'oblemsearch-problem"><div class="mdui-col-xs-1"><p class="problemsearch-pid" style="line-height: 26px;">'   +
 						tmp[0]+'</p></div><div class="mdui-col-xs-3" onclick="window.location.href=\'/pro'+
 						'blem?id='+tmp[0]+'\';"><p class="problemsearch-title" style="line-height: 26px;">'+tmp[1]+'</p></div><div c'+
-						'lass="mdui-col-xs-6"><p class="problemsearch-algorithmtag" style="line-height: 26px;">'                     +
-						gettags(tmp[3].split(";"),"#14558f")+'&nbsp;'+gettags(tmp[4].split(";"),"#22700a")+
-						'</p></div><div class="mdui-col-xs-2"><p class="problemsearch-difficultytag" style="line-height: 26px;">'    +
+						'lass="mdui-col-xs-6"><p class="problemsearch-algorithmtag" style="line-height: 26px;">';
+					var taghtml="";
+					if(tmp[3].length>1){
+						taghtml=taghtml+gettags(tmp[3].split(";"),"#14558f");
+						if(tmp[4].length>1)taghtml=taghtml+'&nbsp;';
+					}
+					if(tmp[4].length>1)taghtml=taghtml+gettags(tmp[4].split(";"),"#22700a");
+					htmlcode=htmlcode+taghtml+'</p></div><div class="mdui-col-xs-2"><p class="problemsearch-difficultytag" style="line-height: 26px;">'    +
 						difficulty(tmp[2])+'</p></div></div>';
 				}
 				if(htmlcode=="")$("problems-div").innerHTML='<div class="mdui-divider mdui-m-y-0"></div><'+
