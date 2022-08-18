@@ -1,24 +1,24 @@
 先来看如何求抛物线解析式。已知两点 $(x_1,y_1),(x_2,y_2)$，求经过这两个点的抛物线解析式 $y=ax^2+bx$ 的系数。
 
- > 由抛物线 $y=ax^2+bx$ 过点 $(x_1,y_1),(x_2,y_2)$ 得： $\begin{cases}y_1=ax_1^2+bx_1 \\\\ y_2=ax_2^2-bx_2\end{cases}$
- >
- > $\begin{cases}x_2y_1=ax_1^2x_2+bx_1x_2\\\\x_1y_2=ax_1x_2^2+bx_1x_2\end{cases}$
- >
- > 由上面的式子减去下面的式子得：
- >
- > $x_2y_1-x_1y_2=a(x_1^2x_2-x_1x_2^2)=ax_1x_2(x_1-x_2)$
- > 
- > $\therefore a=\dfrac{x_2y_1-x_1y_2}{x_1x_2(x_1-x_2)}$
- > 
- > $\because y_1=ax_1^2+bx_1$
- > 
- > $\therefore b=\dfrac{y_1-ax_1^2}{x_1}$
- > 
- > $\because x_1\ne0$
- > 
- > $\therefore b=\dfrac{y_1}{x_1}-ax_1$
- > 
- > $\therefore\begin{cases}a=\dfrac{x_2y_1-x_1y_2}{x_1x_2(x_1-x_2)}\\\\b=\dfrac{y_1-ax_1^2}{x_1}\end{cases}$
+由抛物线 $y=ax^2+bx$ 过点 $(x_1,y_1),(x_2,y_2)$ 得： $\begin{cases}y_1=ax_1^2+bx_1 \\\\ y_2=ax_2^2-bx_2\end{cases}$
+
+$\begin{cases}x_2y_1=ax_1^2x_2+bx_1x_2\\\\x_1y_2=ax_1x_2^2+bx_1x_2\end{cases}$
+
+由上面的式子减去下面的式子得：
+
+$x_2y_1-x_1y_2=a(x_1^2x_2-x_1x_2^2)=ax_1x_2(x_1-x_2)$
+ 
+$\therefore a=\dfrac{x_2y_1-x_1y_2}{x_1x_2(x_1-x_2)}$
+ 
+$\because y_1=ax_1^2+bx_1$
+ 
+$\therefore b=\dfrac{y_1-ax_1^2}{x_1}$
+ 
+$\because x_1\ne0$
+ 
+$\therefore b=\dfrac{y_1}{x_1}-ax_1$
+ 
+$\therefore\begin{cases}a=\dfrac{x_2y_1-x_1y_2}{x_1x_2(x_1-x_2)}\\\\b=\dfrac{y_1-ax_1^2}{x_1}\end{cases}$
 
 我们预处理出每两个点所在的抛物线，并用 $n$ 位二进制数记录抛物线上有哪些点（将经过点 $i,j$ 的抛物线上的点用 $c_{i,j}$ 来记录），复杂度为 $O(n^3)$。
 
