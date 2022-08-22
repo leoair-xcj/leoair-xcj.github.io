@@ -4,4 +4,4 @@
 
 所以我们可以每次枚举一条边，每次在不经过这条边做 `换根dp` ，复杂度为 $O(n^2)$，可以接受。
 
-对于 `换根dp` 时的求值，设 $d_x$ 为以 $x$ 为根的子树中 $x$ 与子树内节点的距离总和，$f_x$ 为以 $x$ 为根的树中 $x$ 与其它节点的距离总和。假设 $f_x$ 已经求出，且 $y\in son_x$，边 $x\rightarrow y$ 的值为 $z$，则 $f_y=d_y+(f_x-d_y)+[(sz_{root}-sz_y)-sz_y]\cdot z=f_x+(sz_{root}-2sz_y)z$。
+对于 `换根dp` 时的求值，设 $d_x$ 为以 $x$ 为根的子树中 $x$ 与子树内节点的距离总和， $f_x$ 为以 $x$ 为根的树中 $x$ 与其它节点的距离总和。假设 $f_x$ 已经求出，且 $y\in son_x$，边 $x\rightarrow y$ 的值为 $z$，则 $f_y=d_y+(f_x-d_y)+[(sz_{root}-sz_y)-sz_y]\cdot z=f_x+(sz_{root}-2sz_y)z$。
