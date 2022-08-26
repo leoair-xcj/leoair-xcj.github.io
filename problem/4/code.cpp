@@ -15,16 +15,22 @@ inline int read(){
 	return s * w;
 }
 
-int lowbit(int x){return (x & 1) ? 1 : (lowbit(x >> 1) + 1);}
+int lowbit(int x){
+	return (x & 1) ? 1 : (lowbit(x >> 1) + 1);
+}
 
-void calc(double x1, double y1, double x2, double y2){a = (x2 * y1 - x1 * y2) / x1 / x2 / (x1 - x2), b = y1 / x1 - a * x1;}
+void calc(double x1, double y1, double x2, double y2){
+	a = (x2 * y1 - x1 * y2) / x1 / x2 / (x1 - x2);
+	b = y1 / x1 - a * x1;
+}
 
 signed main(){
 	for (int i = 1; i < (1 << 18); ++i) bit[i] = lowbit(i);
 	for (scanf("%d", &_); _--; ){
 		memset(c, 0, sizeof(c));
 		memset(f, 0x3f, sizeof(f));
-		scanf("%d%d", &n, &m), f[0] = 0;
+		f[0] = 0;
+		scanf("%d%d", &n, &m);
 		for (int i = 1; i <= n; ++i) scanf("%lf%lf", &x[i], &y[i]);
 		for (int i = 1; i <= n; ++i)
 			for (int j = 1; j <= n; ++j){
