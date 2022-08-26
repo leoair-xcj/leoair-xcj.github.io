@@ -19,7 +19,10 @@ inline int read(){
 	return s * w;
 }
 
-void add(int u, int v){e[++cnt] = {v, head[u]}, head[u] = cnt;}
+void add(int u, int v){
+	e[++cnt] = {v, head[u]};
+	head[u] = cnt;
+}
 
 void find_loop(int x){
 	v[x] = 1;
@@ -28,19 +31,36 @@ void find_loop(int x){
 }
 
 void dp(int x){
-	f[x][1] = a[x], f[x][0] = 0, v[x] = 1;
+	v[x] = 1;
+	f[x][0] = 0;
+	f[x][1] = a[x];
 	for (int i = head[x]; i; i = e[i].nxt){
 		int y = e[i].to;
 		if (y == root) f[y][1] = -2e9;
-		else dp(y), f[x][1] += f[y][0], f[x][0] += max(f[y][0], f[y][1]);
+		else {
+			dp(y);
+			f[x][1] += f[y][0];
+			f[x][0] += max(f[y][0], f[y][1]);
+		}
 	}
 }
 
 signed main(){
 	n = read();
-	for (int i = 1; i <= n; ++i) a[i] = read(), b[i] = read(), add(b[i], i);
+	for (int i = 1; i <= n; ++i){
+		a[i] = read();
+		b[i] = read();
+		add(b[i], i);
+	}
 	for (int i = 1, val; i <= n; ++i)
-		if (!v[i]) find_loop(i), dp(root), val = max(f[root][0], f[root][1]), root = b[root], dp(root), ans += max(val, max(f[root][0], f[root][1]));
+		if (!v[i]){
+			find_loop(i);
+			dp(root);
+			val = max(f[root][0], f[root][1]);
+			root = b[root];
+			dp(root);
+			ans += max(val, max(f[root][0], f[root][1]));
+		}
 	printf("%lld\n", ans);
 	return 0;
 }
