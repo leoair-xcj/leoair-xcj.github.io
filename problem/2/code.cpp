@@ -18,20 +18,31 @@ inline int read(){
 	return s * w;
 }
 
-void add(int u, int v){e[++cnt] = {v, head[u]}, head[u] = cnt;}
+void add(int u, int v){
+	e[++cnt] = {v, head[u]};
+	head[u] = cnt;
+}
 
 void tarjan(int x){
-	dfn[x] = low[x] = ++num, sta[++top] = x, ins[x] = 1;
+	ins[x] = 1;
+	sta[++top] = x;
+	dfn[x] = low[x] = ++num;
 	for (int i = head[x]; i; i = e[i].nxt){
 		int y = e[i].to;
-		if (!dfn[y]) tarjan(y), low[x] = min(low[x], low[y]);
-		else if (ins[y]) low[x] = min(low[x], dfn[y]);
+		if (!dfn[y]){
+			tarjan(y);
+			low[x] = min(low[x], low[y]);
+		} else if (ins[y]) low[x] = min(low[x], dfn[y]);
 	}
 	if (dfn[x] == low[x]){
 		++scc;
 		int y;
 		do {
-			y = sta[top--], aa[scc] += a[y], bb[scc] += b[y], ins[y] = 0, c[y] = scc;
+			y = sta[top--];
+			aa[scc] += a[y];
+			bb[scc] += b[y];
+			ins[y] = 0;
+			c[y] = scc;
 		} while (x != y);
 	}
 }
@@ -50,15 +61,21 @@ signed main(){
 	n = read(), m = read();
 	for (int i = 1; i <= n; ++i) a[i] = read();
 	for (int i = 1; i <= n; ++i) b[i] = read();
-	for (int i = 1; i <= n; ++i) d[i] = read(), add(d[i], i);
+	for (int i = 1; i <= n; ++i){
+		d[i] = read();
+		add(d[i], i);
+	}
 	for (int i = 1; i <= n; ++i)
 		if (!dfn[i]) tarjan(i);
 	cnt = 0;
 	for (int i = 0; i <= n; ++i) head[i] = 0;
 	for (int i = 1; i <= n; ++i)
-		if (c[i] != c[d[i]]) add(c[d[i]], c[i]), ++in[c[i]];
+		if (c[i] != c[d[i]]){
+			add(c[d[i]], c[i]), ++in[c[i]];
+		}
 	for (int i = 1; i <= scc; ++i)
 		if (!in[i]) add(0, i);
-	dp(0), printf("%d\n", f[0][m]);
+	dp(0);
+	printf("%d\n", f[0][m]);
 	return 0;
 }
