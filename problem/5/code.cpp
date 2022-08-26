@@ -30,31 +30,43 @@ inline int read(){
 	return s * w;
 }
 
-void add(int u, int v){e[++cnt] = {v, head[u]}, head[u] = cnt;}
+void add(int u, int v){
+	e[++cnt] = {v, head[u]};
+	head[u] = cnt;
+}
 
 void index(int p){
-	ac(p) = ac(lp) + ac(rp), lc(p) = lc(lp), rc(p) = rc(rp);
+	lc(p) = lc(lp);
+	rc(p) = rc(rp);
+	ac(p) = ac(lp) + ac(rp);
 	if (rc(lp) == lc(rp)) --ac(p);
 }
 
 void build(int p, int l, int r){
-	l(p) = l, r(p) = r;
+	l(p) = l;
+	r(p) = r;
 	if (l == r){
-		lc(p) = rc(p) = a[rk[l]], ac(p) = 1;
+		ac(p) = 1;
+		lc(p) = rc(p) = a[rk[l]];
 		return ;
 	}
 	int mid = (l + r) >> 1;
-	build(lp, l, mid), build(rp, mid + 1, r), index(p);
+	build(lp, l, mid);
+	build(rp, mid + 1, r);
+	index(p);
 }
 
 void spread(int p){
 	if (!tag(p)) return ;
-	lc(lp) = lc(rp) = rc(lp) = rc(rp) = tag(lp) = tag(rp) = tag(p), ac(lp) = ac(rp) = 1, tag(p) = 0;
+	lc(lp) = lc(rp) = rc(lp) = rc(rp) = tag(lp) = tag(rp) = tag(p);
+	ac(lp) = ac(rp) = 1;
+	tag(p) = 0;
 }
 
 void change(int p, int l, int r, int col){
 	if (l <= l(p) && r(p) <= r){
-		lc(p) = rc(p) = tag(p) = col, ac(p) = 1;
+		lc(p) = rc(p) = tag(p) = col;
+		ac(p) = 1;
 		return ;
 	}
 	spread(p);
@@ -80,17 +92,22 @@ int ask(int p, int l, int r){
 }
 
 void dfs1(int x){
-	sz[x] = 1, son[x] = -1;
+	sz[x] = 1;
+	son[x] = -1;
 	for (int i = head[x]; i; i = e[i].nxt){
 		int y = e[i].to;
 		if (dep[y]) continue;
-		dep[y] = dep[x] + 1, fa[y] = x, dfs1(y), sz[x] += sz[y];
+		fa[y] = x;
+		dep[y] = dep[x] + 1;
+		dfs1(y);
+		sz[x] += sz[y];
 		if (!~son[x] || sz[y] > sz[son[x]]) son[x] = y;
 	}
 }
 
 void dfs2(int x, int top_x){
-	top[x] = top_x, rk[dfn[x] = ++tot] = x;
+	top[x] = top_x;
+	rk[dfn[x] = ++tot] = x;
 	if (!~son[x]) return ;
 	dfs2(son[x], top_x);
 	for (int i = head[x]; i; i = e[i].nxt){
@@ -102,7 +119,8 @@ void dfs2(int x, int top_x){
 void change1(int x, int y, int z){
 	while (top[x] != top[y]){
 		if (dep[top[x]] < dep[top[y]]) swap(x, y);
-		change(1, dfn[top[x]], dfn[x], z), x = fa[top[x]];
+		change(1, dfn[top[x]], dfn[x], z);
+		x = fa[top[x]];
 	}
 	if (dep[x] > dep[y]) swap(x, y);
 	change(1, dfn[x], dfn[y], z);
@@ -110,27 +128,51 @@ void change1(int x, int y, int z){
 
 int ask1(int x, int y, int res = 0, int col1 = -1, int col2 = -1){
 	while (top[x] != top[y]){
-		if (dep[top[x]] < dep[top[y]]) swap(x, y), swap(col1, col2);
-		L = dfn[top[x]], R = dfn[x], res += ask(1, dfn[top[x]], dfn[x]), x = fa[top[x]];
+		if (dep[top[x]] < dep[top[y]]){
+			swap(x, y);
+			swap(col1, col2);
+		}
+		L = dfn[top[x]];
+		R = dfn[x];
+		res += ask(1, dfn[top[x]], dfn[x]);
+		x = fa[top[x]];
 		if (cr == col1) --res;
 		col1 = cl;
 	}
-	if (dep[x] > dep[y]) swap(x, y), swap(col1, col2);
-	L = dfn[x], R = dfn[y], res += ask(1, dfn[x], dfn[y]);
+	if (dep[x] > dep[y]){
+		swap(x, y);
+		swap(col1, col2);
+	}
+	L = dfn[x];
+	R = dfn[y];
+	res += ask(1, dfn[x], dfn[y]);
 	if (cl == col1) --res;
 	if (cr == col2) --res;
 	return res;
 }
 
 signed main(){
-	n = read(), m = read();
+	n = read();
+	m = read();
 	for (int i = 1; i <= n; ++i) a[i] = read();
-	for (int i = 1, u, v; i < n; ++i) u = read(), v = read(), add(u, v), add(v, u);
-	dep[1] = 1, dfs1(1), dfs2(1, 1), build(1, 1, n);
+	for (int i = 1, u, v; i < n; ++i){
+		u = read();
+		v = read();
+		add(u, v);
+		add(v, u);
+	}
+	dep[1] = 1;
+	dfs1(1);
+	dfs2(1, 1);
+	build(1, 1, n);
 	for (int x, y, z; m--; ){
-		scanf("%s", op), x = read(), y = read();
-		if (op[0] == 'C') z = read(), change1(x, y, z);
-		else printf("%d\n", ask1(x, y));
+		scanf("%s", op);
+		x = read();
+		y = read();
+		if (op[0] == 'C'){
+			z = read();
+			change1(x, y, z);
+		} else printf("%d\n", ask1(x, y));
 	}
 	return 0;
 }
