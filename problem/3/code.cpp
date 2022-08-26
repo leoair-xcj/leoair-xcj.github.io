@@ -15,7 +15,9 @@ inline int read(){
 
 signed main(){
 	memset(f, 0x3f, sizeof(f));
-	n = read(), m = read(), f[(1 << n) - 1] = 0;
+	n = read();
+	m = read();
+	f[(1 << n) - 1] = 0;
 	for (int i = 1; i <= m; ++i)
 		for (int j = 1; j <= n; ++j) a[i][j] = read();
 	for (int i = (1 << n) - 1; ~i; --i)
