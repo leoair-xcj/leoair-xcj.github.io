@@ -18,14 +18,21 @@ inline int read(){
 	return s * w;
 }
 
-void add(int u, int v, int w){e[++cnt] = {v, head[u], w}, head[u] = cnt;}
+void add(int u, int v, int w){
+	e[++cnt] = {v, head[u], w};
+	head[u] = cnt;
+}
 
 void dfs(int x){
-	sz[x] = 1, d[x] = 0;
+	sz[x] = 1;
+	d[x] = 0;
 	for (int i = head[x]; i; i = e[i].nxt){
 		int y = e[i].to, z = e[i].value;
 		if (y == fa[x]) continue;
-		fa[y] = x, dfs(y), sz[x] += sz[y], d[x] += d[y] + sz[y] * z;
+		fa[y] = x;
+		dfs(y);
+		sz[x] += sz[y];
+		d[x] += d[y] + sz[y] * z;
 	}
 }
 
@@ -34,16 +41,35 @@ void dp(int x, int root){
 	for (int i = head[x]; i; i = e[i].nxt){
 		int y = e[i].to, z = e[i].value;
 		if (y == fa[x]) continue;
-		f[y] = f[x] + (sz[root] - 2 * sz[y]) * z, dp(y, root), mn[x] = min(mn[x], mn[y]);
+		f[y] = f[x] + (sz[root] - 2 * sz[y]) * z;
+		dp(y, root);
+		mn[x] = min(mn[x], mn[y]);
 	}
 }
 
 signed main(){
 	n = read();
-	for (int i = 1; i < n; ++i) U[i] = read(), V[i] = read(), W[i] = read(), add(U[i], V[i], W[i]), add(V[i], U[i], W[i]);
+	for (int i = 1; i < n; ++i){
+		U[i] = read();
+		V[i] = read();
+		W[i] = read();
+		add(U[i], V[i], W[i]);
+		add(V[i], U[i], W[i]);
+	}
 	for (int i = 1, u, v, w, res; i < n; ++i){
 		memset(mn, 0x3f, sizeof(mn));
-		u = U[i], v = V[i], w = W[i], fa[u] = v, fa[v] = u, dfs(u), f[u] = d[u], dp(u, u), dfs(v), f[v] = d[v], dp(v, v), res = 0;
+		u = U[i];
+		v = V[i];
+		w = W[i];
+		fa[u] = v;
+		fa[v] = u;
+		dfs(u);
+		f[u] = d[u];
+		dp(u, u);
+		dfs(v);
+		f[v] = d[v];
+		dp(v, v);
+		res = 0;
 		for (int j = 1; j <= n; ++j) res += f[j];
 		ans = min(ans, res / 2 + sz[u] * sz[v] * w + mn[u] * sz[v] + mn[v] * sz[u]);
 	}
